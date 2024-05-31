@@ -1,15 +1,21 @@
 package br.com.orangex.api.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Document(collection = "user")
-public class User {
+public class User implements UserDetails {
 
     @Id
     private String id;
@@ -19,20 +25,29 @@ public class User {
     @Indexed(unique = true)
     private String email;
 
+    @JsonProperty("username")
     @Indexed(unique = true)
-    private String username;
+    private String nickname;
 
+    private String password;
+
+    @JsonProperty("birth_date")
     @Field("birth_date")
     private LocalDate birthDate;
 
+    @Field("role")
+    private UserRole userRole;
+
     public User() {}
 
-    public User(String id, String name, String email, String username, LocalDate birthDate) {
+    public User(String id, String name, String email, String nickname, String password, LocalDate birthDate) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
         this.birthDate = birthDate;
+        this.userRole = UserRole.USER;
     }
 
     public String getId() {
@@ -59,12 +74,43 @@ public class User {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(userRole == UserRole.ADMIN){
+            return List.of(new SimpleGrantedAuthority(UserRole.ADMIN.getUserRole()), new SimpleGrantedAuthority(UserRole.USER.getUserRole()));
+        }else{
+            return List.of(new SimpleGrantedAuthority(UserRole.USER.getUserRole()));
+        }
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public LocalDate getBirthDate() {
@@ -80,11 +126,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(id, email);
     }
 }
