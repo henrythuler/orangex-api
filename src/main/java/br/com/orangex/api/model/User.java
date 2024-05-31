@@ -47,7 +47,6 @@ public class User implements UserDetails {
         this.nickname = nickname;
         this.password = password;
         this.birthDate = birthDate;
-        this.userRole = UserRole.USER;
     }
 
     public String getId() {
