@@ -2,8 +2,8 @@ package br.com.orangex.api.exception;
 
 public class NotFoundException extends RuntimeException{
 
-    public NotFoundException(String message, Long id) {
-        super(String.format("%s (id: %d) not found...", message, id));
+    public NotFoundException(String message, String id) {
+        super(String.format("%s (id: %s) not found...", message, id));
     }
 
 }

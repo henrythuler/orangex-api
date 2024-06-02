@@ -1,6 +1,7 @@
 package br.com.orangex.api.dto;
 
 import br.com.orangex.api.model.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 
@@ -8,7 +9,8 @@ public record GetUserDTO(
         String id,
         String name,
         String email,
-        String nickname,
+        String username,
+        @JsonProperty("birth_date")
         LocalDate birthDate
 ) {
 
@@ -17,7 +19,7 @@ public record GetUserDTO(
             user.getId(),
             user.getName(),
             user.getEmail(),
-            user.getNickname(),
+            user.getUsername(),
             user.getBirthDate()
         );
     }

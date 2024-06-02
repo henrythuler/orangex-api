@@ -15,10 +15,9 @@ public record PostUserDTO(
         @NotBlank(message = "Email is required!")
         @Email(message = "Invalid email!")
         String email,
-        @JsonProperty("username")
         @NotBlank(message = "Username is required!")
         @Size(min = 2, max = 30, message = "Username is between 2 and 30 characters")
-        String nickname,
+        String username,
         @NotBlank(message = "Password is required!")
         @Size(min = 2, max = 20, message = "Password is between 8 and 20 characters")
         String password,

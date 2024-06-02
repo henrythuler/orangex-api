@@ -25,9 +25,8 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String email;
 
-    @JsonProperty("username")
     @Indexed(unique = true)
-    private String nickname;
+    private String username;
 
     private String password;
 
@@ -40,11 +39,11 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String id, String name, String email, String nickname, String password, LocalDate birthDate) {
+    public User(String id, String name, String email, String username, String password, LocalDate birthDate) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.nickname = nickname;
+        this.username = username;
         this.password = password;
         this.birthDate = birthDate;
     }
@@ -101,15 +100,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public LocalDate getBirthDate() {
@@ -125,11 +120,12 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id, username);
     }
+
 }

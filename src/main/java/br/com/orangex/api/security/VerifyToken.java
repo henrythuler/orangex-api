@@ -34,8 +34,8 @@ public class VerifyToken extends OncePerRequestFilter {
             //Cleaning the token (Removing Bearer word)
             token = token.replace("Bearer", "").trim();
 
-            String email = tokenService.verifyToken(token);
-            UserDetails user = userRepository.findByEmail(email);
+            String username = tokenService.verifyToken(token);
+            UserDetails user = userRepository.findByUsername(username);
 
             UsernamePasswordAuthenticationToken userAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
