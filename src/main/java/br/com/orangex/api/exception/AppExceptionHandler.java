@@ -20,4 +20,13 @@ public class AppExceptionHandler {
         return ResponseEntity.status(status).body(new StandardException(Instant.now(), status.value(), error, message, req.getDescription(false)));
     }
 
+    //Handling an unique constraint violated exception
+    @ExceptionHandler(UniqueConstraintViolatedException.class)
+    public ResponseEntity<StandardException> handleUniqueConstraintViolated(UniqueConstraintViolatedException e, WebRequest req){
+        String error = "Unique constraint violated";
+        String message = e.getMessage();
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new StandardException(Instant.now(), status.value(), error, message, req.getDescription(false)));
+    }
+
 }

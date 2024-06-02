@@ -3,11 +3,13 @@ package br.com.orangex.api.service;
 import br.com.orangex.api.dto.GetUserDTO;
 import br.com.orangex.api.dto.PostUserDTO;
 import br.com.orangex.api.exception.NotFoundException;
+import br.com.orangex.api.exception.UniqueConstraintViolatedException;
 import br.com.orangex.api.model.User;
 import br.com.orangex.api.model.UserRole;
 import br.com.orangex.api.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +24,17 @@ public class UserService {
 
     public GetUserDTO create(PostUserDTO user){
 
-        User newUser = new User();
-        BeanUtils.copyProperties(user, newUser);
-        String passwordEncoded = passwordEncoder.encode(newUser.getPassword());
-        newUser.setPassword(passwordEncoded);
-        newUser.setUserRole(UserRole.USER);
+        try{
+            User newUser = new User();
+            BeanUtils.copyProperties(user, newUser);
+            String passwordEncoded = passwordEncoder.encode(newUser.getPassword());
+            newUser.setPassword(passwordEncoded);
+            newUser.setUserRole(UserRole.USER);
 
-        return new GetUserDTO(repository.save(newUser));
+            return new GetUserDTO(repository.save(newUser));
+        }catch (DuplicateKeyException e){
+            throw new UniqueConstraintViolatedException();
+        }
 
     }
 
