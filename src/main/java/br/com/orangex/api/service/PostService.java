@@ -1,6 +1,7 @@
 package br.com.orangex.api.service;
 
 import br.com.orangex.api.dto.CreatePostDTO;
+import br.com.orangex.api.dto.UpdatePostDTO;
 import br.com.orangex.api.exception.AuthException;
 import br.com.orangex.api.exception.NotFoundException;
 import br.com.orangex.api.model.Post;
@@ -45,6 +46,31 @@ public class PostService {
         }else{
             throw new AuthException("An authentication error occurred...");
         }
+
+    }
+
+    public Post update(UpdatePostDTO updatedPost){
+
+        Optional<Post> post = postRepository.findById(updatedPost.id());
+
+        if(post.isEmpty()) throw new NotFoundException("Post", updatedPost.id());
+
+        if(!updatedPost.author().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername())) throw new AuthException("An authentication error occurred...");
+
+        BeanUtils.copyProperties(updatedPost, post.get());
+
+        return postRepository.save(post.get());
+
+    }
+
+    public void delete(String id){
+
+        Optional<Post> post = postRepository.findById(id);
+        if(post.isEmpty()) throw new NotFoundException("Post", id);
+
+        if(!post.get().getAuthor().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername())) throw new AuthException("An authentication exception ocurred...");
+
+        postRepository.deleteById(id);
 
     }
 

@@ -32,7 +32,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                             .requestMatchers(HttpMethod.GET, "/{username}").authenticated()
-                            .requestMatchers(HttpMethod.DELETE, "/del/user/{username}").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/del/user").authenticated()
                             .requestMatchers(HttpMethod.POST, "/posts").authenticated();
                     }
                 )
