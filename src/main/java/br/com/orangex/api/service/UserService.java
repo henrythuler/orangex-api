@@ -1,7 +1,7 @@
 package br.com.orangex.api.service;
 
 import br.com.orangex.api.dto.GetUserDTO;
-import br.com.orangex.api.dto.PostUserDTO;
+import br.com.orangex.api.dto.CreateUserDTO;
 import br.com.orangex.api.exception.NotFoundException;
 import br.com.orangex.api.exception.UniqueConstraintViolatedException;
 import br.com.orangex.api.model.User;
@@ -13,6 +13,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -22,7 +24,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public GetUserDTO create(PostUserDTO user){
+    public GetUserDTO create(CreateUserDTO user){
 
         try{
             User newUser = new User();
@@ -41,6 +43,15 @@ public class UserService {
     public GetUserDTO findById(String id){
 
         return new GetUserDTO(repository.findById(id).orElseThrow(() -> new NotFoundException("User", id)));
+
+    }
+
+    public GetUserDTO getUserByUsername(String username){
+
+        Optional<User> user = repository.findByUsername(username);
+        if(user.isEmpty()) throw new NotFoundException("User", username);
+
+        return new GetUserDTO(user.get());
 
     }
 

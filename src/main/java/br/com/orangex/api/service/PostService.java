@@ -2,6 +2,7 @@ package br.com.orangex.api.service;
 
 import br.com.orangex.api.dto.CreatePostDTO;
 import br.com.orangex.api.exception.AuthException;
+import br.com.orangex.api.exception.NotFoundException;
 import br.com.orangex.api.model.Post;
 import br.com.orangex.api.model.User;
 import br.com.orangex.api.repository.PostRepository;
@@ -11,6 +12,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {

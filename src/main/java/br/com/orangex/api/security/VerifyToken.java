@@ -35,7 +35,7 @@ public class VerifyToken extends OncePerRequestFilter {
             token = token.replace("Bearer", "").trim();
 
             String username = tokenService.verifyToken(token);
-            UserDetails user = userRepository.findByUsername(username);
+            UserDetails user = userRepository.findByUsername(username).get();
 
             UsernamePasswordAuthenticationToken userAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public record PostUserDTO(
+public record CreateUserDTO(
         @NotBlank(message = "Name is required!")
         @Size(min = 2, max = 80, message = "Name is between 2 and 80 characters")
         String name,

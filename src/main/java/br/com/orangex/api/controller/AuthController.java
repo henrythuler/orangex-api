@@ -2,9 +2,8 @@ package br.com.orangex.api.controller;
 
 import br.com.orangex.api.dto.GetUserDTO;
 import br.com.orangex.api.dto.LoginDTO;
-import br.com.orangex.api.dto.PostUserDTO;
+import br.com.orangex.api.dto.CreateUserDTO;
 import br.com.orangex.api.model.User;
-import br.com.orangex.api.repository.UserRepository;
 import br.com.orangex.api.security.TokenService;
 import br.com.orangex.api.service.UserService;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,9 +53,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<GetUserDTO> register(@RequestBody @Valid PostUserDTO postUserDTO){
+    public ResponseEntity<GetUserDTO> register(@RequestBody @Valid CreateUserDTO createUserDTO){
 
-        GetUserDTO getUserDTO = userService.create(postUserDTO);
+        GetUserDTO getUserDTO = userService.create(createUserDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(getUserDTO.id()).toUri();
         return ResponseEntity.created(location).body(getUserDTO);
 
