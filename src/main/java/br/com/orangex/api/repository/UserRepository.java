@@ -15,4 +15,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     //Finds user for verify token authentication
     Optional<User> findByUsername(String username);
 
+    void deleteByUsername(String username);
+
 }

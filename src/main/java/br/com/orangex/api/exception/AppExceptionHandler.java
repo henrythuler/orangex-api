@@ -2,6 +2,7 @@ package br.com.orangex.api.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,7 +38,7 @@ public class AppExceptionHandler {
     public ResponseEntity<StandardException> handleAuthException(AuthException e, WebRequest req){
         String error = "Authentication exception";
         String message = e.getMessage();
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status).body(new StandardException(Instant.now(), status.value(), error, message, req.getDescription(false)));
     }
 
@@ -47,6 +48,15 @@ public class AppExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         e.getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    //Handling a bad credentials exception
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<StandardException> handleBadCredentialsException(BadCredentialsException e, WebRequest req){
+        String error = "Bad credentials";
+        String message = "Invalid email or password";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status).body(new StandardException(Instant.now(), status.value(), error, message, req.getDescription(false)));
     }
 
 }

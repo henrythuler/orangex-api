@@ -29,10 +29,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
                         authorize
-                                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/{username}").authenticated()
-                                .requestMatchers(HttpMethod.POST, "/posts").authenticated();
+                            .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/{username}").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/del/user/{username}").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/posts").authenticated();
                     }
                 )
                 .addFilterBefore(verifyToken, UsernamePasswordAuthenticationFilter.class)
