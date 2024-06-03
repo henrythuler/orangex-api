@@ -22,10 +22,19 @@ public class AppExceptionHandler {
 
     //Handling an unique constraint violated exception
     @ExceptionHandler(UniqueConstraintViolatedException.class)
-    public ResponseEntity<StandardException> handleUniqueConstraintViolated(UniqueConstraintViolatedException e, WebRequest req){
+    public ResponseEntity<StandardException> handleUniqueConstraintViolatedException(UniqueConstraintViolatedException e, WebRequest req){
         String error = "Unique constraint violated";
         String message = e.getMessage();
         HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new StandardException(Instant.now(), status.value(), error, message, req.getDescription(false)));
+    }
+
+    //Handling an authentication exception
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<StandardException> handleAuthException(AuthException e, WebRequest req){
+        String error = "Authentication exception";
+        String message = e.getMessage();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status).body(new StandardException(Instant.now(), status.value(), error, message, req.getDescription(false)));
     }
 
