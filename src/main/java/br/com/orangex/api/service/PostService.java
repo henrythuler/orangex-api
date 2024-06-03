@@ -49,6 +49,16 @@ public class PostService {
 
     }
 
+    public Post getById(String id){
+
+        Optional<Post> post = postRepository.findById(id);
+
+        if(post.isEmpty()) throw new NotFoundException("Post", id);
+
+        return post.get();
+
+    }
+
     public Post update(UpdatePostDTO updatedPost){
 
         Optional<Post> post = postRepository.findById(updatedPost.id());

@@ -33,7 +33,10 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                             .requestMatchers(HttpMethod.GET, "/{username}").authenticated()
                             .requestMatchers(HttpMethod.DELETE, "/del/user").authenticated()
-                            .requestMatchers(HttpMethod.POST, "/posts").authenticated();
+                            .requestMatchers(HttpMethod.POST, "/posts").authenticated()
+                            .requestMatchers(HttpMethod.GET, "/posts/{id}").authenticated()
+                            .requestMatchers(HttpMethod.PUT, "/posts").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/posts/del/{id}").authenticated();
                     }
                 )
                 .addFilterBefore(verifyToken, UsernamePasswordAuthenticationFilter.class)
