@@ -11,7 +11,7 @@ public record CreatePostDTO(
         @NotBlank(message = "Your post can't be blank!")
         @Size(min = 1, max = 55, message = "The characters maximum is 55")
         String body,
-        @NotBlank(message = "Post date is required!")
+        @NotNull(message = "Post date is required!")
         @JsonProperty("posted_at")
         Instant postedAt,
         @NotNull(message = "Author is required!")

@@ -20,7 +20,8 @@ public class Post {
     @JsonProperty("posted_at")
     @Field("posted_at")
     private Instant postedAt;
-    private Integer likes;
+
+    private List<String> likes = new ArrayList<>();
 
     private AuthorDTO author;
 
@@ -60,12 +61,8 @@ public class Post {
         this.postedAt = postedAt;
     }
 
-    public Integer getLikes() {
+    public List<String> getLikes() {
         return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
     }
 
     public AuthorDTO getAuthor() {
