@@ -31,6 +31,9 @@ public class SecurityConfig {
                         authorize
                             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                            .requestMatchers("/swagger-ui/**",
+                                    "/swagger-resources/*",
+                                    "/api-docs/**").permitAll()
                             .anyRequest().authenticated();
                     }
                 )
