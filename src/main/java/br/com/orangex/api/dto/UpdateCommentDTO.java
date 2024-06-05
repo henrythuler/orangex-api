@@ -8,7 +8,6 @@ public record UpdateCommentDTO(
         String id,
         @NotBlank(message = "Your post can't be blank!")
         @Size(min = 1, max = 55, message = "The characters maximum is 55")
-        String body,
-        AuthorDTO author
+        String body
 ) {
 }

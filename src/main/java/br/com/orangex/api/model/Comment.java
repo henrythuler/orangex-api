@@ -7,10 +7,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Comment {
 
-    @Id
     private String id;
     private String body;
     @Field("commented_at")
@@ -18,10 +18,11 @@ public class Comment {
     private AuthorDTO author;
 
     public Comment() {
+        this.id = UUID.randomUUID().toString();
     }
 
-    public Comment(String id, String body, Instant commentedAt, AuthorDTO author) {
-        this.id = id;
+    public Comment(String body, Instant commentedAt, AuthorDTO author) {
+        this.id = UUID.randomUUID().toString();;
         this.body = body;
         this.commentedAt = commentedAt;
         this.author = author;

@@ -2,13 +2,13 @@ package br.com.orangex.api.service;
 
 import br.com.orangex.api.dto.CreateCommentDTO;
 import br.com.orangex.api.dto.CreatePostDTO;
+import br.com.orangex.api.dto.UpdateCommentDTO;
 import br.com.orangex.api.dto.UpdatePostDTO;
 import br.com.orangex.api.exception.AuthException;
 import br.com.orangex.api.exception.NotFoundException;
 import br.com.orangex.api.model.Comment;
 import br.com.orangex.api.model.Post;
 import br.com.orangex.api.model.User;
-import br.com.orangex.api.repository.CommentRepository;
 import br.com.orangex.api.repository.PostRepository;
 import br.com.orangex.api.repository.UserRepository;
 import br.com.orangex.api.util.CurrentUser;
@@ -16,7 +16,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +29,6 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
 
     public Post create(CreatePostDTO postDTO){
 
@@ -72,24 +68,21 @@ public class PostService {
 
     public Post update(UpdatePostDTO updatedPost){
 
-        Optional<Post> post = postRepository.findById(updatedPost.id());
-
-        if(post.isEmpty()) throw new NotFoundException("Post", updatedPost.id());
+        Post post = getById(updatedPost.id());
 
         if(!updatedPost.author().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername())) throw new AuthException("An authentication error occurred...");
 
-        BeanUtils.copyProperties(updatedPost, post.get());
+        BeanUtils.copyProperties(updatedPost, post);
 
-        return postRepository.save(post.get());
+        return postRepository.save(post);
 
     }
 
     public void delete(String id){
 
-        Optional<Post> post = postRepository.findById(id);
-        if(post.isEmpty()) throw new NotFoundException("Post", id);
+        Post post = getById(id);
 
-        if(!post.get().getAuthor().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername()) || !post.get().getAuthor().name().equals(CurrentUser.getCurrentAuthenticatedUser().getName())) throw new AuthException("An authentication exception ocurred...");
+        if(!post.getAuthor().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername()) || !post.getAuthor().name().equals(CurrentUser.getCurrentAuthenticatedUser().getName())) throw new AuthException("An authentication exception ocurred...");
 
         postRepository.deleteById(id);
 
@@ -123,8 +116,6 @@ public class PostService {
 
         BeanUtils.copyProperties(commentDTO, comment);
 
-        comment = commentRepository.save(comment);
-
         post.getComments().add(comment);
         postRepository.save(post);
 
@@ -132,33 +123,53 @@ public class PostService {
 
     }
 
+    public Post updateComment(String postId, UpdateCommentDTO commentDTO){
+
+        Post post = getById(postId);
+
+        List<Comment> postComments = post.getComments();
+
+        Comment comment = findCommentById(postComments, commentDTO.id());
+
+        if(comment == null) throw new NotFoundException("Comment", commentDTO.id());
+
+        if(!comment.getAuthor().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername()) || !comment.getAuthor().name().equals(CurrentUser.getCurrentAuthenticatedUser().getName())) throw new AuthException("An authentication error occurred...");
+
+        postComments.remove(comment);
+
+        BeanUtils.copyProperties(commentDTO, comment);
+
+        postComments.add(comment);
+
+        return postRepository.save(post);
+
+    }
+
     public Post deleteComment(String postId, String commentId){
 
-        Optional<Comment> comment = commentRepository.findById(commentId);
+        Post post = getById(postId);
 
-        if(comment.isEmpty()) throw new NotFoundException("Comment", commentId);
+        List<Comment> postComments = post.getComments();
 
-        Comment foundComment = comment.get();
+        Comment foundComment = findCommentById(postComments, commentId);
+
+        if(foundComment == null) throw new NotFoundException("Comment", commentId);
 
         if(!foundComment.getAuthor().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername())) throw new AuthException("An authentication error occurred...");
 
-        Optional<Post> post = postRepository.findById(postId);
+        postComments.remove(foundComment);
 
-        if(post.isEmpty()) throw new NotFoundException("Post", postId);
+        return postRepository.save(post);
 
-        List<Comment> postComments = post.get().getComments();
+    }
 
-        Comment deleteComment = null;
+    private Comment findCommentById(List<Comment> comments, String commentId){
 
-        for(Comment c : postComments){
-            if(c.getId().equals(commentId)) deleteComment = c;
+        for(Comment c : comments){
+            if(c.getId().equals(commentId)) return c;
         }
 
-        postComments.remove(deleteComment);
-
-        commentRepository.deleteById(commentId);
-
-        return postRepository.save(post.get());
+        return null;
 
     }
 

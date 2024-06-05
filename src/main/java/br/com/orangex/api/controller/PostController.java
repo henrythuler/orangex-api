@@ -2,6 +2,7 @@ package br.com.orangex.api.controller;
 
 import br.com.orangex.api.dto.CreateCommentDTO;
 import br.com.orangex.api.dto.CreatePostDTO;
+import br.com.orangex.api.dto.UpdateCommentDTO;
 import br.com.orangex.api.dto.UpdatePostDTO;
 import br.com.orangex.api.model.Post;
 import br.com.orangex.api.service.PostService;
@@ -52,6 +53,11 @@ public class PostController {
     @PutMapping("/posts/{id}/comment")
     public ResponseEntity<Post> comment(@PathVariable String id, @RequestBody @Valid CreateCommentDTO commentDTO){
         return ResponseEntity.ok(service.comment(id, commentDTO));
+    }
+
+    @PutMapping("/posts/{postId}/comment/update")
+    public ResponseEntity<Post> updateComment(@PathVariable String postId, @RequestBody @Valid UpdateCommentDTO commentDTO){
+        return ResponseEntity.ok(service.updateComment(postId, commentDTO));
     }
 
     @DeleteMapping("/posts/del/{id}")

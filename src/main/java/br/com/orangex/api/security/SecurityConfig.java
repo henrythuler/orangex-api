@@ -31,17 +31,7 @@ public class SecurityConfig {
                         authorize
                             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/{username}").authenticated()
-                            .requestMatchers(HttpMethod.DELETE, "/users/del").authenticated()
-                            .requestMatchers(HttpMethod.PUT, "/users/update").authenticated()
-                            .requestMatchers(HttpMethod.POST, "/posts").authenticated()
-                            .requestMatchers(HttpMethod.GET, "/feed").authenticated()
-                            .requestMatchers(HttpMethod.GET, "/posts/{id}").authenticated()
-                            .requestMatchers(HttpMethod.PUT, "/posts").authenticated()
-                            .requestMatchers(HttpMethod.PUT, "/posts/{id}/like").authenticated()
-                            .requestMatchers(HttpMethod.PUT, "/posts/{id}/comment").authenticated()
-                            .requestMatchers(HttpMethod.DELETE, "/posts/{postId}/comment/del/{commentId}").authenticated()
-                            .requestMatchers(HttpMethod.DELETE, "/posts/del/{id}").authenticated();
+                            .anyRequest().authenticated();
                     }
                 )
                 .addFilterBefore(verifyToken, UsernamePasswordAuthenticationFilter.class)
