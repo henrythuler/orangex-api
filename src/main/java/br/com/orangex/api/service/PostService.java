@@ -132,4 +132,34 @@ public class PostService {
 
     }
 
+    public Post deleteComment(String postId, String commentId){
+
+        Optional<Comment> comment = commentRepository.findById(commentId);
+
+        if(comment.isEmpty()) throw new NotFoundException("Comment", commentId);
+
+        Comment foundComment = comment.get();
+
+        if(!foundComment.getAuthor().username().equals(CurrentUser.getCurrentAuthenticatedUser().getUsername())) throw new AuthException("An authentication error occurred...");
+
+        Optional<Post> post = postRepository.findById(postId);
+
+        if(post.isEmpty()) throw new NotFoundException("Post", postId);
+
+        List<Comment> postComments = post.get().getComments();
+
+        Comment deleteComment = null;
+
+        for(Comment c : postComments){
+            if(c.getId().equals(commentId)) deleteComment = c;
+        }
+
+        postComments.remove(deleteComment);
+
+        commentRepository.deleteById(commentId);
+
+        return postRepository.save(post.get());
+
+    }
+
 }

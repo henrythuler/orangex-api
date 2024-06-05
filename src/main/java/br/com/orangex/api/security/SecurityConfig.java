@@ -40,6 +40,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.PUT, "/posts").authenticated()
                             .requestMatchers(HttpMethod.PUT, "/posts/{id}/like").authenticated()
                             .requestMatchers(HttpMethod.PUT, "/posts/{id}/comment").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/posts/{postId}/comment/del/{commentId}").authenticated()
                             .requestMatchers(HttpMethod.DELETE, "/posts/del/{id}").authenticated();
                     }
                 )

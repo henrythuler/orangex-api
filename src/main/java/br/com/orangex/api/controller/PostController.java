@@ -54,10 +54,15 @@ public class PostController {
         return ResponseEntity.ok(service.comment(id, commentDTO));
     }
 
-    @DeleteMapping("posts/del/{id}")
+    @DeleteMapping("/posts/del/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id){
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/posts/{postId}/comment/del/{commentId}")
+    public ResponseEntity<Post> deleteComment(@PathVariable String postId, @PathVariable String commentId){
+        return ResponseEntity.ok(service.deleteComment(postId, commentId));
     }
 
 }
