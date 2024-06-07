@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 public class UserController {
@@ -70,7 +69,7 @@ public class UserController {
                 ))
             })
     @PutMapping(value = "/users/update", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<GetUserDTO> update(@RequestBody(description = "Updated user", required = true, content = @Content(schema = @Schema(implementation = UpdateUserDTO.class))) @Valid UpdateUserDTO userDTO){
+    public ResponseEntity<GetUserDTO> update(@RequestBody @Valid UpdateUserDTO userDTO){
         return ResponseEntity.ok(service.update(userDTO));
     }
 
@@ -96,7 +95,7 @@ public class UserController {
                 ))
             })
     @DeleteMapping(value = "/users/del", consumes = "application/json")
-    public ResponseEntity<Void> delete(@RequestBody(description = "User's to be deleted username", required = true, content = @Content(schema = @Schema(implementation = DeleteUserDTO.class))) DeleteUserDTO deleteUserDTO){
+    public ResponseEntity<Void> delete(@RequestBody DeleteUserDTO deleteUserDTO){
         service.delete(deleteUserDTO.username());
         return ResponseEntity.noContent().build();
     }

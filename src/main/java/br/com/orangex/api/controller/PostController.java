@@ -10,12 +10,10 @@ import br.com.orangex.api.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +48,7 @@ public class PostController {
                 ))
             })
     @PostMapping(value = "/posts", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Post> create(@RequestBody(description = "Post to be created", required = true, content = @Content(schema = @Schema(implementation = CreatePostDTO.class))) @Valid CreatePostDTO postDTO){
+    public ResponseEntity<Post> create(@RequestBody @Valid CreatePostDTO postDTO){
         Post newPost = service.create(postDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPost.getId()).toUri();
         return ResponseEntity.created(location).body(newPost);
@@ -127,7 +125,7 @@ public class PostController {
                 ))
             })
     @PutMapping(value = "/posts", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Post> update(@RequestBody(description = "Updated post", required = true, content = @Content(schema = @Schema(implementation = UpdatePostDTO.class))) @Valid UpdatePostDTO postDTO){
+    public ResponseEntity<Post> update(@RequestBody @Valid UpdatePostDTO postDTO){
         return ResponseEntity.ok(service.update(postDTO));
     }
 
@@ -180,7 +178,7 @@ public class PostController {
                 ))
             })
     @PutMapping(value = "/posts/{id}/comment", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Post> comment(@PathVariable String id, @RequestBody(description = "Comment to be created", required = true, content = @Content(schema = @Schema(implementation = CreateCommentDTO.class))) @Valid CreateCommentDTO commentDTO){
+    public ResponseEntity<Post> comment(@PathVariable String id, @RequestBody @Valid CreateCommentDTO commentDTO){
         return ResponseEntity.ok(service.comment(id, commentDTO));
     }
 
@@ -208,7 +206,7 @@ public class PostController {
                 ))
             })
     @PutMapping(value = "/posts/{postId}/comment/update", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Post> updateComment(@PathVariable String postId, @RequestBody(description = "Updated comment", required = true, content = @Content(schema = @Schema(implementation = UpdateCommentDTO.class))) @Valid UpdateCommentDTO commentDTO){
+    public ResponseEntity<Post> updateComment(@PathVariable String postId, @RequestBody @Valid UpdateCommentDTO commentDTO){
         return ResponseEntity.ok(service.updateComment(postId, commentDTO));
     }
 
